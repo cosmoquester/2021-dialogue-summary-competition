@@ -1,0 +1,25 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Environments
+.env
+.venv
+env/
+venv/
+ENV/
+env.bak/
+venv.bak/
+
+# personal vscode settings
+.vscode/launch.json
+.vscode/tasks.json
+
+# log file
+*.log
+
+# build byproducts
+build/
+dist/
+quick_slack.egg-info/
