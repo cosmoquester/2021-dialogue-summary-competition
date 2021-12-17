@@ -22,6 +22,11 @@ def module():
     summary_max_length = 20
     alpha = 0.9984
 
+    import MeCab
+
+    tagger = MeCab.Tagger
+    MeCab.Tagger = type("Tagger", (object,), {"parse": lambda _, x: "\n".join(t + "\tDUMMY" for t in x.split())})
+
     with tempfile.TemporaryDirectory() as model_save_dir:
         yield ReinforceLearningModule(
             model,
@@ -34,6 +39,8 @@ def module():
             summary_max_length,
             alpha,
         )
+
+    MeCab.Tagger = tagger
 
 
 def test_training_step(module: ReinforceLearningModule):
