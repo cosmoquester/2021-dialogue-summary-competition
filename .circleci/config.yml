@@ -2,7 +2,7 @@ version: 2.1
 
 executors:
   python-executor:
-    working_directory: ~/python3-template
+    working_directory: ~/2021-dialogue-summary-competition
     docker:
       - image: circleci/python:3.8
 
