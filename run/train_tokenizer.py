@@ -45,7 +45,7 @@ def main(args: argparse.Namespace):
 
     trainer = UnigramTrainer(
         vocab_size=args.vocab_size,
-        special_tokens=["[PAD]", "[UNK]", "[BOS]", "[EOS]", "[MASK]", "[SEP]", "[SEPT]", *special_words],
+        special_tokens=["[PAD]", "[UNK]", "[BOS]", "[EOS]", "[MASK]", "[SEP]", *special_words],
         unk_token="[UNK]",
     )
 
@@ -53,7 +53,15 @@ def main(args: argparse.Namespace):
     tokenizer.train(glob(args.data_pattern), trainer)
 
     print(f"[+] Save tokenizer to {args.tokenizer_path}")
-    pretrained_tokenizer = PreTrainedTokenizerFast(tokenizer_object=tokenizer)
+    pretrained_tokenizer = PreTrainedTokenizerFast(
+        tokenizer_object=tokenizer,
+        bos_token="[BOS]",
+        pad_token="[PAD]",
+        eos_token="[EOS]",
+        unk_token="[UNK]",
+        cls_token="[BOS]",
+        sep_token="[EOS]",
+    )
     pretrained_tokenizer.save_pretrained(args.tokenizer_path)
 
 
