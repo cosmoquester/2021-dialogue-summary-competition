@@ -1,0 +1,163 @@
+{
+    "numberOfItems": 2,
+    "data": [
+        {
+            "header": {
+                "dialogueInfo": {
+                    "numberOfParticipants": 2,
+                    "numberOfUtterances": 4,
+                    "numberOfTurns": 4,
+                    "type": "일상 대화",
+                    "topic": "식음료",
+                    "dialogueID": "70b05b36-5f37-11ec-91f5-0c9d921fe15b"
+                },
+                "participantsInfo": [
+                    {
+                        "age": "20대",
+                        "residentialProvince": "서울특별시",
+                        "gender": "남성",
+                        "participantID": "P01"
+                    },
+                    {
+                        "age": "20대",
+                        "residentialProvince": "경기도",
+                        "gender": "여성",
+                        "participantID": "P02"
+                    }
+                ]
+            },
+            "body": {
+                "dialogue": [
+                    {
+                        "utterance": "밥 먹었어~?",
+                        "utteranceID": "U1",
+                        "participantID": "P01",
+                        "date": "2023-12-12",
+                        "turnID": "T1",
+                        "time": "17:26:00"
+                    },
+                    {
+                        "utterance": "편의점에서 대충 때웠어",
+                        "utteranceID": "U2",
+                        "participantID": "P02",
+                        "date": "2023-12-12",
+                        "turnID": "T2",
+                        "time": "17:26:00"
+                    },
+                    {
+                        "utterance": "허어얼.. 편의점이라니",
+                        "utteranceID": "U3",
+                        "participantID": "P01",
+                        "date": "2023-12-12",
+                        "turnID": "T3",
+                        "time": "17:28:00"
+                    },
+                    {
+                        "utterance": "#@이모티콘#",
+                        "utteranceID": "U4",
+                        "participantID": "P02",
+                        "date": "2023-12-12",
+                        "turnID": "T4",
+                        "time": "18:17:00"
+                    }
+                ],
+                "summary": "편의점에서 대충 식사를 때웠다는 이야기를 하고 있다."
+            }
+        },
+        {
+            "header": {
+                "dialogueInfo": {
+                    "numberOfParticipants": 2,
+                    "numberOfUtterances": 8,
+                    "numberOfTurns": 5,
+                    "type": "일상 대화",
+                    "topic": "식음료",
+                    "dialogueID": "8340450f-5f37-11ec-91f5-0c9d921fe15b"
+                },
+                "participantsInfo": [
+                    {
+                        "age": "20대",
+                        "residentialProvince": "경기도",
+                        "gender": "여성",
+                        "participantID": "P01"
+                    },
+                    {
+                        "age": "30대",
+                        "residentialProvince": "경기도",
+                        "gender": "남성",
+                        "participantID": "P02"
+                    }
+                ]
+            },
+            "body": {
+                "dialogue": [
+                    {
+                        "utterance": "엄마가 잔뜩 사와가지고ㅋㅋㅋㅋ",
+                        "utteranceID": "U1",
+                        "participantID": "P01",
+                        "date": "2012-02-15",
+                        "turnID": "T1",
+                        "time": "14:15:00"
+                    },
+                    {
+                        "utterance": "주말에 먹을래??",
+                        "utteranceID": "U2",
+                        "participantID": "P01",
+                        "date": "2012-02-15",
+                        "turnID": "T1",
+                        "time": "14:15:00"
+                    },
+                    {
+                        "utterance": "싸오게??",
+                        "utteranceID": "U3",
+                        "participantID": "P02",
+                        "date": "2012-02-15",
+                        "turnID": "T2",
+                        "time": "14:15:00"
+                    },
+                    {
+                        "utterance": "남으면??",
+                        "utteranceID": "U4",
+                        "participantID": "P01",
+                        "date": "2012-02-15",
+                        "turnID": "T3",
+                        "time": "14:19:00"
+                    },
+                    {
+                        "utterance": "오빠가 원하면",
+                        "utteranceID": "U5",
+                        "participantID": "P01",
+                        "date": "2012-02-15",
+                        "turnID": "T3",
+                        "time": "14:19:00"
+                    },
+                    {
+                        "utterance": "ㄴㄴ 괜찮은데",
+                        "utteranceID": "U6",
+                        "participantID": "P02",
+                        "date": "2012-02-15",
+                        "turnID": "T4",
+                        "time": "14:19:00"
+                    },
+                    {
+                        "utterance": "숨겨놓고 싸갈게",
+                        "utteranceID": "U7",
+                        "participantID": "P01",
+                        "date": "2012-02-15",
+                        "turnID": "T5",
+                        "time": "14:19:00"
+                    },
+                    {
+                        "utterance": "#@이모티콘#",
+                        "utteranceID": "U8",
+                        "participantID": "P01",
+                        "date": "2012-02-15",
+                        "turnID": "T5",
+                        "time": "14:19:00"
+                    }
+                ],
+                "summary": "엄마가 사 온 음식이 남아있으면 숨겨서라도 싸가겠다고 이야기한다."
+            }
+        }
+    ]
+}
