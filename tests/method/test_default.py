@@ -7,7 +7,7 @@ from transformers import BartConfig, BartForConditionalGeneration
 
 from summarizer.method import DefaultModule
 
-VOCAB_SIZE = 1000
+VOCAB_SIZE = 100
 DIALOGUE_MAX_SEQ_LEN = 20
 SUMMARY_MAX_SEQ_LEN = 10
 BATCH_SIZE = 2
