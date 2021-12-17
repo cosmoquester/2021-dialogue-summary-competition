@@ -1,3 +1,7 @@
 torch==1.10.1
 transformers==4.14.1
 pytorch-lightning==1.5.6
+
+### required for RL Module
+mecab-python3==1.0.4
+rouge==1.0.1
