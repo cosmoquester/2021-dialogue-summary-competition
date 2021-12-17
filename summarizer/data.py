@@ -6,12 +6,12 @@ import torch
 from transformers import AutoTokenizer
 
 
-def load_json_data(path: str, sept_token: str) -> Tuple[List[str], List[str], List[str]]:
+def load_json_data(path: str, sep_token: str) -> Tuple[List[str], List[str], List[str]]:
     """Load dialogue summarization dataset json files of https://aihub.or.kr/aidata/30714
 
     Args:
         path: path of json file
-        sept_token: turn seperation token to divide each utterances
+        sep_token: turn seperation token to divide each utterances
     Returns:
         result of file, which is a tuple of ids, dialogues, summaries
     """
@@ -40,19 +40,19 @@ def load_json_data(path: str, sept_token: str) -> Tuple[List[str], List[str], Li
         if prev_line:
             utts.append(prev_line)
 
-        dialogues.append(sept_token.join(utts))
+        dialogues.append(sep_token.join(utts))
         summaries.append(datum["body"].get("summary"))
     return ids, dialogues, summaries
 
 
-def load_tsv_data(path: str, sept_token: str) -> Tuple[List[str], List[str], List[str]]:
+def load_tsv_data(path: str, sep_token: str) -> Tuple[List[str], List[str], List[str]]:
     """Load arbitrary tsv file of formed like (id, dialogue, summary) with header
     each `dialogue` should be dumped json string from a list of utterances.
     ex) '["안녕", "잘가"]'
 
     Args:
         path: path of tsv file
-        sept_token: turn seperation token to divide each utterances
+        sep_token: turn seperation token to divide each utterances
     Returns:
         result of file, which is a tuple of ids, dialogues, summaries
     """
@@ -64,7 +64,7 @@ def load_tsv_data(path: str, sept_token: str) -> Tuple[List[str], List[str], Lis
             dialogue = json.loads(row["dialogue"])
 
             ids.append(row["id"])
-            dialogues.append(sept_token.join(dialogue))
+            dialogues.append(sep_token.join(dialogue))
             summaries.append(row.get("summary"))
     return ids, dialogues, summaries
 
@@ -88,7 +88,7 @@ class DialogueSummarizationDataset(torch.utils.data.Dataset):
         tokenizer: AutoTokenizer,
         dialogue_max_seq_len: int,
         summary_max_seq_len: int,
-        sept_token: str,
+        sep_token: str,
         use_summary: bool,
     ):
         """
@@ -97,7 +97,7 @@ class DialogueSummarizationDataset(torch.utils.data.Dataset):
             tokenizer: tokenizer to tokenize dialogue and summary string
             dialogue_max_seq_len: max sequence length of dialouge
             summary_max_seq_len: max sequence length of summary
-            sept_token: turn seperation token to divide each utterances
+            sep_token: turn seperation token to divide each utterances
             use_summary: whether to use summary data or not (should be False for inference)
         """
         super().__init__()
@@ -110,7 +110,7 @@ class DialogueSummarizationDataset(torch.utils.data.Dataset):
             self.dialogue_attention_masks,
             self.summary_input_ids,
             self.summary_attention_masks,
-        ) = self.load_dataset(paths, tokenizer, dialogue_max_seq_len, summary_max_seq_len, sept_token, use_summary)
+        ) = self.load_dataset(paths, tokenizer, dialogue_max_seq_len, summary_max_seq_len, sep_token, use_summary)
 
     def load_dataset(
         self,
@@ -118,7 +118,7 @@ class DialogueSummarizationDataset(torch.utils.data.Dataset):
         tokenizer: AutoTokenizer,
         dialogue_max_seq_len: int,
         summary_max_seq_len: int,
-        sept_token: str,
+        sep_token: str,
         use_summary: bool,
     ) -> Tuple[
         List[str],
@@ -136,7 +136,7 @@ class DialogueSummarizationDataset(torch.utils.data.Dataset):
             tokenizer: tokenizer to tokenize dialogue and summary string
             dialogue_max_seq_len: max sequence length of dialouge
             summary_max_seq_len: max sequence length of summary
-            sept_token: turn seperation token to divide each utterances
+            sep_token: turn seperation token to divide each utterances
             use_summary: whether to use summary data or not (should be False for inference)
         Returns:
             original ids, dialogues, summaries and input ids and attention masks for dialogues and summaries
@@ -145,7 +145,7 @@ class DialogueSummarizationDataset(torch.utils.data.Dataset):
         for path in paths:
             loader_fn = load_tsv_data if path.endswith(".tsv") else load_json_data
 
-            file_ids, file_dialogues, file_summaries = loader_fn(path, sept_token)
+            file_ids, file_dialogues, file_summaries = loader_fn(path, sep_token)
             ids.extend(file_ids)
             dialogues.extend(file_dialogues)
             summaries.extend(file_summaries)
