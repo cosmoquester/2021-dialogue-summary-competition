@@ -30,7 +30,7 @@ class R3FModule(pl.LightningModule):
         max_learning_rate: float,
         min_learning_rate: float,
         warmup_rate: float,
-        model_save_dir: str = None,
+        model_save_dir: str,
         r3f_lambda: float = 1.0,
     ):
         super().__init__()
@@ -143,16 +143,15 @@ class R3FModule(pl.LightningModule):
         }
 
     def validation_epoch_end(self, outputs):
-        if self.model_save_dir:
-            val_losses = [output["val_loss"] for output in outputs]
-            val_accs = [output["val_acc"] for output in outputs]
+        val_losses = [output["val_loss"] for output in outputs]
+        val_accs = [output["val_acc"] for output in outputs]
 
-            val_loss_mean = sum(val_losses) / len(val_losses)
-            val_acc_mean = sum(val_accs) / len(val_accs)
+        val_loss_mean = sum(val_losses) / len(val_losses)
+        val_acc_mean = sum(val_accs) / len(val_accs)
 
-            self.model.save_pretrained(
-                os.path.join(
-                    self.model_save_dir,
-                    f"model-{self.current_epoch:02d}epoch-{val_loss_mean:.4f}loss-{val_acc_mean:.4f}acc",
-                ),
-            )
+        self.model.save_pretrained(
+            os.path.join(
+                self.model_save_dir,
+                f"model-{self.current_epoch:02d}epoch-{val_loss_mean:.4f}loss-{val_acc_mean:.4f}acc",
+            ),
+        )
