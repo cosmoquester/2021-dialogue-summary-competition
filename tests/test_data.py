@@ -4,7 +4,7 @@ from transformers import AutoTokenizer
 
 from summarizer.data import DialogueSummarizationDataset, load_json_data, load_tsv_data
 
-from .constant import TEST_DATA_DIR
+from .constant import TEST_DATA_DIR, TOKENIZER_PATH
 
 JSON_DATA_PATH = os.path.join(TEST_DATA_DIR, "sample.json")
 TSV_DATA_PATH = os.path.join(TEST_DATA_DIR, "sample.tsv")
@@ -42,7 +42,7 @@ def test_dialogue_summarization_dataset():
     dialogue_max_seq_len = 20
     summary_max_seq_len = 10
 
-    tokenizer = AutoTokenizer.from_pretrained(os.path.join(TEST_DATA_DIR, "sample_tokenizer"))
+    tokenizer = AutoTokenizer.from_pretrained(TOKENIZER_PATH)
     dataset = DialogueSummarizationDataset(
         [JSON_DATA_PATH, TSV_DATA_PATH], tokenizer, dialogue_max_seq_len, summary_max_seq_len, SEP, True
     )
