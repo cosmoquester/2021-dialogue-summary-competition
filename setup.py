@@ -1,12 +1,12 @@
 from setuptools import find_packages, setup
 
 setup(
-    name="python3-template",
+    name="2021-dialogue-summary-competition",
     version="0.0.1",
-    description="This repository is template for my python project.",
-    python_requires='>=3.7',
+    description="[2021 훈민정음 한국어 음성•자연어 인공지능 경진대회] 대화요약 부문 알라꿍달라꿍 팀의 대화요약 학습 및 추론 코드를 공유하기 위한 레포입니다.",
+    python_requires=">=3.7",
     install_requires=[],
-    url="https://github.com/cosmoquester/python3-template.git",
+    url="https://github.com/cosmoquester/2021-dialogue-summary-competition.git",
     author="Park Sangjun",
     packages=find_packages(exclude=["tests"]),
 )
