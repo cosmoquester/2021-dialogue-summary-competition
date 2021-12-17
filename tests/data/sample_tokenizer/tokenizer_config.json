@@ -1,0 +1,1 @@
+{"bos_token": "[BOS]", "pad_token": "[PAD]", "eos_token": "[EOS]", "unk_token": "[UNK]", "cls_token": "[BOS]", "sep_token": "[EOS]", "tokenizer_class": "PreTrainedTokenizerFast"}
