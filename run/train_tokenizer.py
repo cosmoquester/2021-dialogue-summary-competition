@@ -55,12 +55,13 @@ def main(args: argparse.Namespace):
     print(f"[+] Save tokenizer to {args.tokenizer_path}")
     pretrained_tokenizer = PreTrainedTokenizerFast(
         tokenizer_object=tokenizer,
-        bos_token="[BOS]",
         pad_token="[PAD]",
-        eos_token="[EOS]",
         unk_token="[UNK]",
+        bos_token="[BOS]",
+        eos_token="[EOS]",
         cls_token="[BOS]",
-        sep_token="[EOS]",
+        mask_token="[MASK]",
+        sep_token="[SEP]",
     )
     pretrained_tokenizer.save_pretrained(args.tokenizer_path)
 
