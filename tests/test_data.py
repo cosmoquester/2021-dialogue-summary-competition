@@ -44,7 +44,7 @@ def test_dialogue_summarization_dataset():
 
     tokenizer = AutoTokenizer.from_pretrained(TOKENIZER_PATH)
     dataset = DialogueSummarizationDataset(
-        [JSON_DATA_PATH, TSV_DATA_PATH], tokenizer, dialogue_max_seq_len, summary_max_seq_len, SEP, True
+        [JSON_DATA_PATH, TSV_DATA_PATH], tokenizer, dialogue_max_seq_len, summary_max_seq_len, True
     )
 
     assert len(dataset) == 4
