@@ -31,7 +31,7 @@ class RDropModule(pl.LightningModule):
         min_learning_rate: float,
         warmup_rate: float,
         model_save_dir: str,
-        rdrop_alpha: float = 0.0,
+        rdrop_alpha: float = 0.7,
     ):
         super().__init__()
 
