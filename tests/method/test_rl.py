@@ -71,7 +71,7 @@ def test_configure_optimizers(module: ReinforceLearningModule):
 
 def test_validation_epoch_end(module: ReinforceLearningModule):
     module.all_gather = lambda x: x
-    module.trainer = type("Trainer", (object,), {"is_global_zero": True, "current_epoch": 1})
+    module.trainer = type("Trainer", (object,), {"is_global_zero": True, "current_epoch": 1, "global_step": 100})
     module.validation_epoch_end([{"val_loss": torch.tensor(0.1234), "val_rouge_l": torch.tensor(0.9999)}] * 10)
 
     assert os.listdir(module.model_save_dir)
