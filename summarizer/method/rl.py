@@ -8,7 +8,7 @@ import torchmetrics
 from transformers import AutoTokenizer, BartForConditionalGeneration, MaxLengthCriteria, StoppingCriteriaList
 from transformers.modeling_outputs import BaseModelOutput
 
-from ..scheduler import get_linear_schedule_with_warmup
+from ..scheduler import LinearWarmupLR
 
 
 class ReinforceLearningModule(pl.LightningModule):
@@ -205,13 +205,11 @@ class ReinforceLearningModule(pl.LightningModule):
 
     def configure_optimizers(self):
         optimizer = torch.optim.AdamW(params=self.model.parameters(), lr=self.max_learning_rate)
-        scheduler = torch.optim.lr_scheduler.LambdaLR(
+        scheduler = LinearWarmupLR(
             optimizer,
-            get_linear_schedule_with_warmup(
-                int(self.total_steps * self.warmup_rate),
-                self.total_steps,
-                self.min_learning_rate / self.max_learning_rate,
-            ),
+            int(self.total_steps * self.warmup_rate),
+            self.total_steps,
+            self.min_learning_rate / self.max_learning_rate,
         )
 
         return {
@@ -220,9 +218,11 @@ class ReinforceLearningModule(pl.LightningModule):
         }
 
     def validation_epoch_end(self, outputs):
-        if self.model_save_dir:
-            val_losses = [output["val_loss"] for output in outputs]
-            val_rouge_ls = [output["val_rouge_l"] for output in outputs]
+        outputs = self.all_gather(outputs)
+
+        if self.trainer.is_global_zero:
+            val_losses = [output["val_loss"].mean() for output in outputs]
+            val_rouge_ls = [output["val_rouge_l"].mean() for output in outputs]
 
             val_loss_mean = sum(val_losses) / len(val_losses)
             val_rouge_l_mean = sum(val_rouge_ls) / len(val_rouge_ls)
@@ -230,6 +230,6 @@ class ReinforceLearningModule(pl.LightningModule):
             self.model.save_pretrained(
                 os.path.join(
                     self.model_save_dir,
-                    f"model-{self.current_epoch:02d}epoch-{val_loss_mean:.4f}loss-{val_rouge_l_mean:.4f}rouge-l",
+                    f"model-{self.current_epoch:02d}epoch-{self.global_step}steps-{val_loss_mean:.4f}loss-{val_rouge_l_mean:.4f}rouge-l",
                 ),
             )

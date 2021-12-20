@@ -6,7 +6,7 @@ import torch.nn.functional as F
 import torchmetrics
 from transformers import BartForConditionalGeneration
 
-from ..scheduler import get_linear_schedule_with_warmup
+from ..scheduler import LinearWarmupLR
 
 
 class DefaultModule(pl.LightningModule):
@@ -93,13 +93,11 @@ class DefaultModule(pl.LightningModule):
 
     def configure_optimizers(self):
         optimizer = torch.optim.AdamW(params=self.model.parameters(), lr=self.max_learning_rate)
-        scheduler = torch.optim.lr_scheduler.LambdaLR(
+        scheduler = LinearWarmupLR(
             optimizer,
-            get_linear_schedule_with_warmup(
-                int(self.total_steps * self.warmup_rate),
-                self.total_steps,
-                self.min_learning_rate / self.max_learning_rate,
-            ),
+            int(self.total_steps * self.warmup_rate),
+            self.total_steps,
+            self.min_learning_rate / self.max_learning_rate,
         )
 
         return {
@@ -108,15 +106,18 @@ class DefaultModule(pl.LightningModule):
         }
 
     def validation_epoch_end(self, outputs):
-        val_losses = [output["val_loss"] for output in outputs]
-        val_accs = [output["val_acc"] for output in outputs]
+        outputs = self.all_gather(outputs)
 
-        val_loss_mean = sum(val_losses) / len(val_losses)
-        val_acc_mean = sum(val_accs) / len(val_accs)
+        if self.trainer.is_global_zero:
+            val_losses = [output["val_loss"].mean() for output in outputs]
+            val_accs = [output["val_acc"].mean() for output in outputs]
 
-        self.model.save_pretrained(
-            os.path.join(
-                self.model_save_dir,
-                f"model-{self.current_epoch:02d}epoch-{val_loss_mean:.4f}loss-{val_acc_mean:.4f}acc",
-            ),
-        )
+            val_loss_mean = sum(val_losses) / len(val_losses)
+            val_acc_mean = sum(val_accs) / len(val_accs)
+
+            self.model.save_pretrained(
+                os.path.join(
+                    self.model_save_dir,
+                    f"model-{self.current_epoch:02d}epoch-{self.global_step}steps-{val_loss_mean:.4f}loss-{val_acc_mean:.4f}acc",
+                ),
+            )
