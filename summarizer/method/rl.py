@@ -218,9 +218,11 @@ class ReinforceLearningModule(pl.LightningModule):
         }
 
     def validation_epoch_end(self, outputs):
-        if self.model_save_dir:
-            val_losses = [output["val_loss"] for output in outputs]
-            val_rouge_ls = [output["val_rouge_l"] for output in outputs]
+        outputs = self.all_gather(outputs)
+
+        if self.trainer.is_global_zero:
+            val_losses = [output["val_loss"].mean() for output in outputs]
+            val_rouge_ls = [output["val_rouge_l"].mean() for output in outputs]
 
             val_loss_mean = sum(val_losses) / len(val_losses)
             val_rouge_l_mean = sum(val_rouge_ls) / len(val_rouge_ls)
