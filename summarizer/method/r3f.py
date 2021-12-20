@@ -153,6 +153,6 @@ class R3FModule(pl.LightningModule):
             self.model.save_pretrained(
                 os.path.join(
                     self.model_save_dir,
-                    f"model-{self.current_epoch:02d}epoch-{val_loss_mean:.4f}loss-{val_acc_mean:.4f}acc",
+                    f"model-{self.current_epoch:02d}epoch-{self.global_step}steps-{val_loss_mean:.4f}loss-{val_acc_mean:.4f}acc",
                 ),
             )
