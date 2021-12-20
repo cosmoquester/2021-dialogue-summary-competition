@@ -6,7 +6,7 @@ import pytorch_lightning as pl
 from pytorch_lightning.callbacks import LearningRateMonitor
 from pytorch_lightning.loggers import TensorBoardLogger, WandbLogger
 from torch.utils.data import DataLoader
-from transformers import BartConfig, BartForConditionalGeneration, PreTrainedTokenizerFast
+from transformers import AutoTokenizer, BartConfig, BartForConditionalGeneration
 
 from summarizer.data import DialogueSummarizationDataset, PretrainDataset
 from summarizer.method import DefaultModule, R3FModule, RDropModule, ReinforceLearningModule
@@ -67,7 +67,7 @@ def main(args: argparse.Namespace):
     logger.info(f"[+] GPU: {args.gpus}")
 
     logger.info(f'[+] Load Tokenizer from "{args.tokenizer}"')
-    tokenizer = PreTrainedTokenizerFast.from_pretrained(args.tokenizer)
+    tokenizer = AutoTokenizer.from_pretrained(args.tokenizer)
 
     if args.method == "pretrain":
         logger.info(f'[+] Load Train Dataset from "{args.train_dataset_pattern}"')
