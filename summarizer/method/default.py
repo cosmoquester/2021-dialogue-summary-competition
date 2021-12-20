@@ -6,7 +6,7 @@ import torch.nn.functional as F
 import torchmetrics
 from transformers import BartForConditionalGeneration
 
-from ..scheduler import get_linear_schedule_with_warmup
+from ..scheduler import LinearWarmupLR
 
 
 class DefaultModule(pl.LightningModule):
@@ -93,13 +93,11 @@ class DefaultModule(pl.LightningModule):
 
     def configure_optimizers(self):
         optimizer = torch.optim.AdamW(params=self.model.parameters(), lr=self.max_learning_rate)
-        scheduler = torch.optim.lr_scheduler.LambdaLR(
+        scheduler = LinearWarmupLR(
             optimizer,
-            get_linear_schedule_with_warmup(
-                int(self.total_steps * self.warmup_rate),
-                self.total_steps,
-                self.min_learning_rate / self.max_learning_rate,
-            ),
+            int(self.total_steps * self.warmup_rate),
+            self.total_steps,
+            self.min_learning_rate / self.max_learning_rate,
         )
 
         return {

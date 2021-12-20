@@ -1,21 +1,33 @@
-from typing import Callable
+import torch
+from torch.optim.lr_scheduler import LambdaLR
 
 
-def get_linear_schedule_with_warmup(num_warmup_steps: int, num_training_steps: int, reduce_rate: float) -> Callable:
-    """LR Scheduling function which is increase lr on warmup steps and decrease on normal steps
+class LinearWarmupLR(LambdaLR):
+    """LR Scheduling function which is increase lr on warmup steps and decrease on normal steps"""
 
-    Args:
-        num_warmup_steps: number of warmup steps
-        num_training_steps: number of whole training steps
-        reduce_rate: min Learning Rate / max Learning Rate 비율
-    Returns:
-        Scheduling function (use with LambdaLR)
-    """
-    decrement = (1.0 - reduce_rate) / (num_training_steps - num_warmup_steps)
+    def __init__(
+        self,
+        optimizer: torch.optim.Optimizer,
+        num_warmup_steps: int,
+        num_training_steps: int,
+        reduce_rate: float,
+        last_epoch: int = -1,
+        verbose: bool = False,
+    ) -> None:
+        """
+        Args:
+            optimizer: torch optimizer
+            num_warmup_steps: number of warmup steps
+            num_training_steps: number of whole training steps
+            reduce_rate: min Learning Rate / max Learning Rate
+        """
+        self.num_warmup_steps = num_warmup_steps
+        self.decrement = (1.0 - reduce_rate) / (num_training_steps - num_warmup_steps)
+        self.reduce_rate = reduce_rate
 
-    def _lr_lambda(current_step: int) -> float:
-        if current_step < num_warmup_steps:
-            return current_step / num_warmup_steps
-        return max(1.0 - decrement * (current_step - num_warmup_steps), reduce_rate)
+        super().__init__(optimizer, self._get_lr, last_epoch=last_epoch, verbose=verbose)
 
-    return _lr_lambda
+    def _get_lr(self, current_step: int) -> float:
+        if current_step < self.num_warmup_steps:
+            return current_step / self.num_warmup_steps
+        return max(1.0 - self.decrement * (current_step - self.num_warmup_steps), self.reduce_rate)
