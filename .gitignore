@@ -23,3 +23,6 @@ venv.bak/
 build/
 dist/
 quick_slack.egg-info/
+
+# training artifacts
+outputs/
