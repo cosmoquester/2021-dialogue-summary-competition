@@ -5,7 +5,7 @@ from transformers import AutoTokenizer, BartForConditionalGeneration
 
 from summarizer.utils import get_logger
 
-parser = argparse.ArgumentParser(description="Inference Dialogue Summarization with BART")
+parser = argparse.ArgumentParser(prog="interactive", description="Inference Dialogue Summarization with BART")
 parser.add_argument("--pretrained-ckpt-path", type=str, help="pretrained BART model path or name")
 parser.add_argument("--tokenizer", type=str, required=True, help="huggingface pretrained tokenizer path")
 parser.add_argument("--dialogue-max-seq-len", type=int, default=256, help="dialogue max sequence length")

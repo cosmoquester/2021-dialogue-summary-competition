@@ -12,9 +12,9 @@ from summarizer.data import DialogueSummarizationDataset, PretrainDataset
 from summarizer.method import DefaultModule, R3FModule, RDropModule, ReinforceLearningModule
 from summarizer.utils import get_logger
 
-parser = argparse.ArgumentParser(description="Train Dialogue Summarization with BART")
-
 # fmt: off
+parser = argparse.ArgumentParser(prog="train", description="Train Dialogue Summarization with BART")
+
 g = parser.add_argument_group("Common Parameter")
 g.add_argument("--wandb-entity", type=str, help="wanDB entity name")
 g.add_argument("--wandb-project", type=str, help="wanDB project name")
