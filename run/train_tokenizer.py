@@ -7,7 +7,7 @@ from tokenizers.pre_tokenizers import Whitespace
 from tokenizers.trainers import UnigramTrainer
 from transformers import PreTrainedTokenizerFast
 
-parser = argparse.ArgumentParser(description="Training Huggingface Tokenizer")
+parser = argparse.ArgumentParser(prog="train_tokenizer", description="Training Huggingface Tokenizer")
 parser.add_argument("--data-pattern", type=str, required=True, help="glob pattern for dataset files")
 parser.add_argument("--tokenizer-path", type=str, required=True, help="path to save tokenizer")
 parser.add_argument("--vocab-size", type=int, default=4000, help="vocab size of tokenizer")

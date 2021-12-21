@@ -10,7 +10,7 @@ from transformers import AutoTokenizer, BartForConditionalGeneration
 from summarizer.data import DialogueSummarizationDataset
 from summarizer.utils import get_logger
 
-parser = argparse.ArgumentParser(description="Inference Dialogue Summarization with BART")
+parser = argparse.ArgumentParser(prog="inference", description="Inference Dialogue Summarization with BART")
 parser.add_argument("--pretrained-ckpt-path", type=str, help="pretrained BART model path or name")
 parser.add_argument("--tokenizer", type=str, required=True, help="huggingface pretrained tokenizer path")
 parser.add_argument("--dataset-pattern", type=str, required=True, help="glob pattern of inference dataset files")
