@@ -1,6 +1,6 @@
 FROM cosmoquester/mecab AS mecab
 
-FROM python:3.7
+FROM python:3.8
 
 COPY --from=mecab /usr/local/etc/mecabrc /usr/local/etc/mecabrc
 COPY --from=mecab /usr/local/lib/* /usr/local/lib/
@@ -23,6 +23,7 @@ RUN git lfs install
 
 COPY requirements.txt .
 
+RUN pip install torch==1.10.1+cpu -f https://download.pytorch.org/whl/cpu/torch_stable.html
 RUN pip install -r requirements.txt
 
 WORKDIR /app
