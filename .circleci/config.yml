@@ -56,8 +56,36 @@ jobs:
             black --check summarizer tests
             isort summarizer tests
 
+  docker-build-push:
+    executor: python-executor
+
+    steps:
+      - checkout
+
+      - setup_remote_docker:
+          docker_layer_caching: true
+
+      - run:
+          name: Docker Image Build and Push
+          command: |
+            echo $DOCKER_ACCESS_TOKEN | docker login --username $DOCKER_USER_NAME --password-stdin
+            DOCKER_IMAGE_NAME="$DOCKER_USER_NAME/$CIRCLE_PROJECT_REPONAME"
+            [[ -z "$CIRCLE_TAG" ]] && TAG="latest" || TAG="$CIRCLE_TAG"
+            docker build -t $DOCKER_IMAGE_NAME:${TAG} . -f docker/Dockerfile
+            docker push $DOCKER_IMAGE_NAME:${TAG}
+            docker build -t $DOCKER_IMAGE_NAME:${TAG}-gpu . -f docker/Dockerfile.gpu
+            docker push $DOCKER_IMAGE_NAME:${TAG}-gpu
+
 workflows:
   main:
     jobs:
       - run-test
       - check-linting
+      - docker-build-push:
+          context:
+            - Docker
+          filters:
+            tags:
+              only: /.+/
+            branches:
+              only: /master/
