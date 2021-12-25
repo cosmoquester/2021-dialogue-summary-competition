@@ -5,9 +5,19 @@
 [![cosmoquester](https://circleci.com/gh/cosmoquester/2021-dialogue-summary-competition.svg?style=svg)](https://app.circleci.com/pipelines/github/cosmoquester/2021-dialogue-summary-competition)
 [![codecov](https://codecov.io/gh/cosmoquester/2021-dialogue-summary-competition/branch/master/graph/badge.svg?token=Vaq4tqh4TL)](https://codecov.io/gh/cosmoquester/2021-dialogue-summary-competition)
 
-[2021 훈민정음 한국어 음성•자연어 인공지능 경진대회] 대화요약 부문 알라꿍달라꿍 팀의 대화요약 학습 및 추론 코드를 공유하기 위한 레포입니다.
+[[2021 훈민정음 한국어 음성•자연어 인공지능 경진대회](http://aihub-competition.or.kr/hangeul)] 대화요약 부문 알라꿍달라꿍 팀의 대화요약 학습 및 추론 코드를 공유하기 위한 레포입니다.
 
 팀원: 박상준([cosmoquester](https://github.com/cosmoquester)), 최기원([ckw1140](https://github.com/ckw1140)), 오혜린([Hyerin-oh](https://github.com/Hyerin-oh))
+
+저희 팀은 이렇게 세 명으로 구성되어 있습니다.
+
+최종 리더보드는 아래와 같고, [대화요약 부문에서 1등을 해내 네이버 대표상을 수상](https://www.msit.go.kr/bbs/view.do?sCode=user&mId=113&mPid=112&pageIndex=1&bbsSeqNo=94&nttSeqNo=3181143&searchOpt=ALL&searchTxt=%EA%B2%BD%EC%A7%84%EB%8C%80%ED%9A%8C)하였습니다.
+
+| Rank | Name | Score |
+| ---- | ---- | ----- |
+| 1 | 알라꿍달라꿍 | 0.34286246 |
+| 2 | ... | 0.3330445 |
+| 3 | ... | 0.33254071 |
 
 ## Directory Structure
 
