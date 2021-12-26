@@ -6,3 +6,7 @@ wandb==0.12.9
 ### required for RL Module
 mecab-python3==1.0.4
 rouge==1.0.1
+
+### required for training tokenizer
+sentencepiece==0.1.96
+httpimport==0.7.2
