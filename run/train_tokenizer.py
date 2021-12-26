@@ -1,10 +1,11 @@
 import argparse
+import os
+import tempfile
 from glob import glob
 
-from tokenizers import Tokenizer
-from tokenizers.models import Unigram
-from tokenizers.pre_tokenizers import Whitespace
-from tokenizers.trainers import UnigramTrainer
+import httpimport
+import sentencepiece as spm
+from tokenizers import SentencePieceUnigramTokenizer
 from transformers import PreTrainedTokenizerFast
 
 parser = argparse.ArgumentParser(prog="train_tokenizer", description="Training Huggingface Tokenizer")
@@ -37,33 +38,54 @@ special_words = [
     "#@시스템#",
 ]
 
+SENTENCEPIECE_URI = "https://raw.githubusercontent.com/google/sentencepiece/master/python/src/sentencepiece"
+
+PAD = "[PAD]"
+UNK = "[UNK]"
+BOS = "[BOS]"
+EOS = "[EOS]"
+MASK = "[MASK]"
+SEP = "[SEP]"
+
 
 def main(args: argparse.Namespace):
-    tokenizer = Tokenizer(Unigram())
-    tokenizer.pre_tokenizer = Whitespace()
-    tokenizer.enable_padding(pad_id=0, pad_token="[PAD]")
+    with tempfile.TemporaryDirectory() as tmpdir:
+        model_prefix = os.path.join(tmpdir, "tokenizer")
 
-    trainer = UnigramTrainer(
-        vocab_size=args.vocab_size,
-        special_tokens=["[PAD]", "[UNK]", "[BOS]", "[EOS]", "[MASK]", "[SEP]", *special_words],
-        unk_token="[UNK]",
-    )
+        spm.SentencePieceTrainer.train(
+            input=",".join(glob(args.data_pattern)),
+            model_prefix=model_prefix,
+            model_type="unigram",
+            vocab_size=args.vocab_size,
+            pad_id=0,
+            unk_id=1,
+            bos_id=2,
+            eos_id=3,
+            pad_piece=PAD,
+            unk_piece=UNK,
+            bos_piece=BOS,
+            eos_piece=EOS,
+            user_defined_symbols=[MASK, SEP, *special_words],
+        )
 
-    print("[+] Start to train tokenizer")
-    tokenizer.train(glob(args.data_pattern), trainer)
+        with httpimport.remote_repo(["sentencepiece_model_pb2"], SENTENCEPIECE_URI):
+            import sentencepiece_model_pb2
 
-    print(f"[+] Save tokenizer to {args.tokenizer_path}")
+            tokenizer = SentencePieceUnigramTokenizer.from_spm(model_prefix + ".model")
+
     pretrained_tokenizer = PreTrainedTokenizerFast(
         tokenizer_object=tokenizer,
-        pad_token="[PAD]",
-        unk_token="[UNK]",
-        bos_token="[BOS]",
-        eos_token="[EOS]",
-        cls_token="[BOS]",
-        mask_token="[MASK]",
-        sep_token="[SEP]",
+        bos_token=BOS,
+        eos_token=EOS,
+        cls_token=BOS,
+        unk_token=UNK,
+        sep_token=SEP,
+        pad_token=PAD,
+        mask_token=MASK,
+        additional_special_tokens=special_words,
     )
     pretrained_tokenizer.save_pretrained(args.tokenizer_path)
+    print(f"[+] Saved to {args.tokenizer_path}")
 
 
 if __name__ == "__main__":
