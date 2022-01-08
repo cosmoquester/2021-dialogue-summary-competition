@@ -148,7 +148,7 @@ class DialogueSummarizationDataset(torch.utils.data.Dataset):
         bos = tokenizer.bos_token
         eos = tokenizer.eos_token
         dialogue_inputs = tokenizer(
-            [bos + self.sep_token.join(x) + eos for x in dialogues],
+            [bos + x + eos for x in dialogues],
             padding="max_length",
             truncation=True,
             max_length=dialogue_max_seq_len,
@@ -158,7 +158,7 @@ class DialogueSummarizationDataset(torch.utils.data.Dataset):
 
         summary_inputs = (
             tokenizer(
-                [bos + self.sep_token.join(x) + eos for x in summaries],
+                [bos + x + eos for x in summaries],
                 padding="max_length",
                 truncation=True,
                 max_length=summary_max_seq_len,
