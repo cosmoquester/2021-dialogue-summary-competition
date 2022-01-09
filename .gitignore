@@ -25,4 +25,6 @@ dist/
 quick_slack.egg-info/
 
 # training artifacts
-outputs/
+logs/
+models/
+wandb/
