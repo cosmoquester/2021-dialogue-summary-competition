@@ -16,9 +16,7 @@ from summarizer.utils import get_logger
 parser = argparse.ArgumentParser(prog="train", description="Train Dialogue Summarization with BART")
 
 g = parser.add_argument_group("Common Parameter")
-g.add_argument("--wandb-entity", type=str, help="wanDB entity name")
-g.add_argument("--wandb-project", type=str, help="wanDB project name")
-g.add_argument("--run-name", type=str, required=True, help="the name of run")
+g.add_argument("--output-dir", type=str, required=True, help="output directory path to save artifacts")
 g.add_argument("--method", type=str, choices=["default", "rdrop", "r3f", "rl", "pretrain"], default="default", help="training method")
 g.add_argument("--model-config-path", type=str, help="model config file path")
 g.add_argument("--tokenizer", type=str, required=True, help="huggingface pretrained tokenizer path")
@@ -40,6 +38,11 @@ g.add_argument("--logging-interval", type=int, default=100, help="logging interv
 g.add_argument("--evaluate-interval", type=int, default=500, help="validation interval")
 g.add_argument("--seed", type=int, default=42, help="random seed")
 
+g = parser.add_argument_group("Wandb Options")
+g.add_argument("--wandb-run-name", type=str, help="wanDB run name")
+g.add_argument("--wandb-entity", type=str, help="wanDB entity name")
+g.add_argument("--wandb-project", type=str, help="wanDB project name")
+
 g = parser.add_argument_group("Method Specific Parameter")
 g.add_argument("--rdrop-alpha", type=float, default=0.7, help="rdrop alpha parameter (only used with `rdrop` method)")
 g.add_argument("--r3f-lambda", type=float, default=1.0, help="r3f lambda parameter (only used with `r3f` method)")
@@ -51,11 +54,8 @@ g.add_argument("--masking-rate", type=float, default=0.3, help="pretrain paramet
 def main(args: argparse.Namespace):
     logger = get_logger("train")
 
-    output_dir = os.path.join("outputs", args.run_name)
-    model_dir = os.path.join(output_dir, "models")
-    os.makedirs(output_dir)
-    os.mkdir(model_dir)
-    logger.info(f'[+] Save output to "{output_dir}"')
+    os.makedirs(args.output_dir)
+    logger.info(f'[+] Save output to "{args.output_dir}"')
 
     logger.info(" ====== Arguements ======")
     for k, v in vars(args).items():
@@ -127,6 +127,7 @@ def main(args: argparse.Namespace):
         raise ValueError("[-] `--model-config-path` or `--pretrained-ckpt-path` is required!")
 
     logger.info(f"[+] Use method: {args.method}")
+    model_dir = os.path.join(args.output_dir, "models")
     if args.method == "rdrop":
         lightning_module = RDropModule(
             model,
@@ -165,14 +166,14 @@ def main(args: argparse.Namespace):
         )
 
     logger.info(f"[+] Start Training")
-    train_loggers = [TensorBoardLogger(output_dir, "", "logs")]
-    if args.wandb_project and args.run_name:
+    train_loggers = [TensorBoardLogger(args.output_dir, "", "logs")]
+    if args.wandb_project:
         train_loggers.append(
             WandbLogger(
-                name=args.run_name,
+                name=args.wandb_run_name or os.path.basename(args.output_dir),
                 project=args.wandb_project,
                 entity=args.wandb_entity,
-                save_dir=output_dir,
+                save_dir=args.output_dir,
             )
         )
     trainer = pl.Trainer(
