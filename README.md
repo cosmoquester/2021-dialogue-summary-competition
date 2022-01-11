@@ -119,6 +119,7 @@ $ python -m run train \
     --epochs 50 --seed 42 --max-learning-rate 2e-4 --batch-size 64 --gpus 1 \
     --model-config-path resources/configs/default.json
 ```
+- 이 학습의 학습추이는 [Wandb](https://wandb.ai/alaggung/dialogue_summarization_public/runs/2vn8htcd)에서 볼 수 있습니다.
 - 이 단계를 학습한 모델은 [alaggung/bart-pretrained](https://huggingface.co/alaggung/bart-pretrained)에서 사용할 수 있습니다.
 
 ### 3. Dialogue Summarization finetune (R3F)
@@ -137,6 +138,7 @@ $ python -m run train \
     --model-config-path resources/configs/default.json \
     --pretrained-ckpt-path outputs/pretrain/models/model-49epoch-218374steps-0.6568loss-0.8601acc
 ```
+- 이 학습의 학습추이는 [Wandb](https://wandb.ai/alaggung/dialogue_summarization_public/runs/2yc359fn)에서 볼 수 있습니다.
 - 이 단계를 학습한 모델은 [alaggung/bart-r3f](https://huggingface.co/alaggung/bart-r3f)에서 사용할 수 있습니다.
 
 ### 4. Dialogue Summarization finetune (RL)
