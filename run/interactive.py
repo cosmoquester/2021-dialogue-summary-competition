@@ -33,7 +33,7 @@ def main(args: argparse.Namespace):
     torch.set_grad_enabled(False)
 
     while True:
-        if input("Start Interactive Summary? (y/N)").lower() in ("n", "no", ""):
+        if input("Start Interactive Summary? (Y/n) ").lower() in ("n", "no"):
             break
 
         utterances = []
