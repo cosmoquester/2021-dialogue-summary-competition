@@ -19,6 +19,59 @@
 | 2 | ... | 0.3330445 |
 | 3 | ... | 0.33254071 |
 
+## Quick Start
+
+대회에서 사용한 기법대로 외부데이터없이 AIHub 데이터만을 이용해 학습한 모델을 쉽게 사용해볼 수 있습니다.
+
+```sh
+$ pip install transformers
+```
+
+```python
+from transformers import pipeline
+
+model_name = "alaggung/bart-r3f"
+max_length = 64
+dialogue = ["밥 ㄱ?", "고고고고 뭐 먹을까?", "어제 김치찌개 먹어서 한식말고 딴 거", "그럼 돈까스 어때?", "오 좋다 1시 학관 앞으로 오셈", "ㅇㅋ"]
+
+summarizer = pipeline("summarization", model=model_name)
+summarization = summarizer("[BOS]" + "[SEP]".join(dialogue) + "[EOS]", max_length=max_length)
+
+print(summarization)
+# Your max_length is set to 64, but you input_length is only 51. You might consider decreasing max_length manually, e.g. summarizer('...', max_length=25)
+# [{'summary_text': '어제 김치찌개를 먹어서 한식 말고 돈가스를 먹기로 했다.'}]
+```
+- 위와 같이 `pipeline`을 이용하면 간단하게 실행할 수 있습니다.
+
+```python
+from transformers import AutoTokenizer, BartForConditionalGeneration
+
+model_name = "alaggung/bart-r3f"
+max_length = 64
+num_beams = 5
+length_penalty = 1.2
+dialogue = ["밥 ㄱ?", "고고고고 뭐 먹을까?", "어제 김치찌개 먹어서 한식말고 딴 거", "그럼 돈까스 어때?", "오 좋다 1시 학관 앞으로 오셈", "ㅇㅋ"]
+
+tokenizer = AutoTokenizer.from_pretrained(model_name)
+model = BartForConditionalGeneration.from_pretrained(model_name)
+model.eval()
+
+inputs = tokenizer("[BOS]" + "[SEP]".join(dialogue) + "[EOS]", return_tensors="pt")
+outputs = model.generate(
+    inputs.input_ids,
+    attention_mask=inputs.attention_mask,
+    num_beams=num_beams,
+    length_penalty=length_penalty,
+    max_length=max_length,
+    use_cache=True,
+)
+summarization = tokenizer.decode(outputs[0], skip_special_tokens=True)
+
+print(summarization)
+# 어제 김치찌개를 먹어서 한식 말고 돈가스를 먹기로 했다.
+```
+- 이렇게 그냥 불러와 추론할 수도 있습니다.
+
 ## Directory Structure
 
 ```
@@ -66,6 +119,8 @@ $ python -m run train \
     --epochs 50 --seed 42 --max-learning-rate 2e-4 --batch-size 64 --gpus 1 \
     --model-config-path resources/configs/default.json
 ```
+- 이 단계를 학습한 모델은 [alaggung/bart-pretrained](https://huggingface.co/alaggung/bart-pretrained)에서 사용할 수 있습니다.
+
 ### 3. Dialogue Summarization finetune (R3F)
 
 사전학습 후에는 Dialogue Summarization task를 학습시켰습니다.
@@ -82,6 +137,7 @@ $ python -m run train \
     --model-config-path resources/configs/default.json \
     --pretrained-ckpt-path outputs/pretrain/models/model-49epoch-218374steps-0.6568loss-0.8601acc
 ```
+- 이 단계를 학습한 모델은 [alaggung/bart-r3f](https://huggingface.co/alaggung/bart-r3f)에서 사용할 수 있습니다.
 
 ### 4. Dialogue Summarization finetune (RL)
 
@@ -141,8 +197,8 @@ $ docker run --rm \
 
 ```sh
 $ python -m run.inference \
-    --pretrained-ckpt-path outputs/r3f/models/model-09epoch-43374steps-1.2955loss-0.6779acc \
-    --tokenizer resources/tokenizers/unigram_4K \
+    --pretrained-ckpt-path alaggung/bart-r3f \
+    --tokenizer alaggung/bart-r3f \
     --dataset-pattern "data/Validation/*.json" \
     --output-path result.tsv \
     --device cuda
@@ -154,12 +210,12 @@ $ python -m run.inference \
 
 ```sh
 $ python -m run interactive \
-    --pretrained-ckpt-path outputs/r3f/models/model-09epoch-43374steps-1.2955loss-0.6779acc  \
-    --tokenizer resources/tokenizers/unigram_4K \
+    --pretrained-ckpt-path alaggung/bart-r3f  \
+    --tokenizer alaggung/bart-r3f \
     --device cuda
 [2022-01-10 00:48:35,717] [+] Use Device: cuda
-[2022-01-10 00:48:35,718] [+] Load Tokenizer from "resources/tokenizers/unigram_4K"
-[2022-01-10 00:48:35,727] [+] Load Model from "outputs/r3f/models/model-09epoch-43374steps-1.2955loss-0.6779acc"
+[2022-01-10 00:48:35,718] [+] Load Tokenizer from "alaggung/bart-r3f"
+[2022-01-10 00:48:35,727] [+] Load Model from "alaggung/bart-r3f"
 [2022-01-10 00:48:39,918] [+] Eval mode & Disable gradient
 Start Interactive Summary? (Y/n) 
 Utterance 1: 밥 ㄱ?
