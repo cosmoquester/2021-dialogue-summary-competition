@@ -151,7 +151,7 @@ $ python -m run train \
     --tokenizer resources/tokenizers/unigram_4K \
     --train-dataset-pattern "data/Training/*.json" \
     --valid-dataset-pattern "data/Validation/*.json" \
-    --epochs 1 --seed 42 --max-learning-rate 5e-5 --batch-size 20 --valid-batch-size 32 --accumulate-grad-batches 6 --gpus 1 \
+    --epochs 1 --seed 42 --max-learning-rate 2e-5 --batch-size 20 --valid-batch-size 32 --accumulate-grad-batches 6 --gpus 1 \
     --model-config-path resources/configs/default.json \
     --pretrained-ckpt-path outputs/r3f/models/model-09epoch-43374steps-1.2955loss-0.6779acc
 ```
