@@ -157,6 +157,8 @@ $ python -m run train \
     --model-config-path resources/configs/default.json \
     --pretrained-ckpt-path outputs/r3f/models/model-09epoch-43374steps-1.2955loss-0.6779acc
 ```
+- 이 학습의 학습추이는 [Wandb](https://wandb.ai/alaggung/dialogue_summarization_public/runs/3ae2abvk)에서 볼 수 있습니다.
+- 이 단계를 학습한 모델은 [alaggung/bart-rl](https://huggingface.co/alaggung/bart-rl)에서 사용할 수 있습니다.
 
 ## Run
 
