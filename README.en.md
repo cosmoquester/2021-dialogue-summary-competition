@@ -5,15 +5,14 @@
 [![cosmoquester](https://circleci.com/gh/cosmoquester/2021-dialogue-summary-competition.svg?style=svg)](https://app.circleci.com/pipelines/github/cosmoquester/2021-dialogue-summary-competition)
 [![codecov](https://codecov.io/gh/cosmoquester/2021-dialogue-summary-competition/branch/master/graph/badge.svg?token=Vaq4tqh4TL)](https://codecov.io/gh/cosmoquester/2021-dialogue-summary-competition)
 
-Please [Click here](https://github.com/cosmoquester/2021-dialogue-summary-competition/blob/master/README.en.md) for English README. 
+[[2021 Korean Voice/Natural Language AI Competition](http://aihub-competition.or.kr/hangeul)] This is repository to share training and inference codes of Team 알라꿍달라꿍.
 
-[[2021 훈민정음 한국어 음성•자연어 인공지능 경진대회](http://aihub-competition.or.kr/hangeul)] 대화요약 부문 알라꿍달라꿍 팀의 대화요약 학습 및 추론 코드를 공유하기 위한 레포입니다.
+Team: Sangjun Park([cosmoquester](https://github.com/cosmoquester)), Kiwon Choi([ckw1140](https://github.com/ckw1140)), Hyerin Oh([Hyerin-oh](https://github.com/Hyerin-oh))
 
-팀원: 박상준([cosmoquester](https://github.com/cosmoquester)), 최기원([ckw1140](https://github.com/ckw1140)), 오혜린([Hyerin-oh](https://github.com/Hyerin-oh))
+Our team consists of these three people.
 
-저희 팀은 이렇게 세 명으로 구성되어 있습니다.
+The final leaderboard is as follows, [Won 1st place in the dialogue summary section and got the Naver Representative Award](https://www.msit.go.kr/bbs/view.do?sCode=user&mId=113&mPid=112&pageIndex=1&bbsSeqNo=94&nttSeqNo=3181143&searchOpt=ALL&searchTxt=%EA%B2%BD%EC%A7%84%EB%8C%80%ED%9A%8C)
 
-최종 리더보드는 아래와 같고, [대화요약 부문에서 1등을 해내 네이버 대표상을 수상](https://www.msit.go.kr/bbs/view.do?sCode=user&mId=113&mPid=112&pageIndex=1&bbsSeqNo=94&nttSeqNo=3181143&searchOpt=ALL&searchTxt=%EA%B2%BD%EC%A7%84%EB%8C%80%ED%9A%8C)하였습니다.
 
 | Rank | Name | Score |
 | ---- | ---- | ----- |
@@ -23,7 +22,7 @@ Please [Click here](https://github.com/cosmoquester/2021-dialogue-summary-compet
 
 ## Quick Start
 
-대회에서 사용한 기법대로 외부데이터없이 AIHub 데이터만을 이용해 학습한 모델을 쉽게 사용해볼 수 있습니다.
+As the technique used in the competition, you can easily use the model trained using only AIHub data without external data.
 
 ```sh
 $ pip install transformers
@@ -43,7 +42,7 @@ print(summarization)
 # Your max_length is set to 64, but you input_length is only 51. You might consider decreasing max_length manually, e.g. summarizer('...', max_length=25)
 # [{'summary_text': '어제 김치찌개를 먹어서 한식 말고 돈가스를 먹기로 했다.'}]
 ```
-- 위와 같이 `pipeline`을 이용하면 간단하게 실행할 수 있습니다.
+- You can run it with `pipeline` simply.
 
 ```python
 from transformers import AutoTokenizer, BartForConditionalGeneration
@@ -72,19 +71,19 @@ summarization = tokenizer.decode(outputs[0], skip_special_tokens=True)
 print(summarization)
 # 어제 김치찌개를 먹어서 한식 말고 돈가스를 먹기로 했다.
 ```
-- 이렇게 그냥 불러와 추론할 수도 있습니다.
+- You can make an inference manually like this.
 
 ## Directory Structure
 
 ```
-# run 디렉토리에는 실행할 수 있는 스크립트들이 들어있습니다.
+# The run directory contains executable scripts.
 run
 ├── inference.py
 ├── interactive.py
 ├── train.py
 └── train_tokenizer.py
 
-# summarizer 디렉토리에는 데이터로더와 학습로직이 들어있습니다.
+# The summarizer directory contains data loader and training logic.
 summarizer
 ├── data.py
 ├── method
@@ -98,18 +97,18 @@ summarizer
 
 ## Process
 
-최종제출에 사용했던 대화요약 모델을 학습하는 절차는 다음과 같습니다. 첨부된 실행 예시에서 하이퍼파라미터는 실제로 대회에서 사용했던 것과 동일합니다. 해당 파라미터들은 V100 32GB GPU 1대 기준으로 타 환경에서는 조절이 필요할 수 있습니다.
+The procedure for learning the dialogue summary model used in the final submission is as follows. In the attached running example, the hyperparameters are actually the same as those used in the competition. These parameters were set on one V100 32GB GPU environment. You may need to be adjusted in other environments.
 
 ### 1. Tokenizer training
 
-저희 팀은 토크나이저를 대회에서 제공한 학습데이터로 직접 학습해 사용하였습니다.
-토크나이저의 학습은 학습데이터의 발화와 요약문을 mecab으로 1차분절한 후에 unigram 방법으로 학습해 사용하였습니다. (**run/train_tokenizer.py** 참고)
+Our team trained tokenizer directly from the training data of the competition.
+To learn the tokenizer, the utterances and summaries of the data were first segmented with mecab, and then the unigram method was used. (See **run/train_tokenizer.py**)
 
 ### 2. BART pretraining
 
-저희는 모델 아키텍쳐로는 BART를 사용했습니다.
-외부 데이터를 사용할 수 없기 때문에 학습 데이터셋의 대화 텍스트로 사전학습을 수행했으며 노이즈는 Text infilling과 Sentence Permutation을 적용했습니다.
-Sentence Permutation은 턴 단위로 수행하였습니다.
+We used BART as our model architecture.
+Since external data was not allowed, pre-training was performed with the dialogue text of the training dataset, and text infilling and sentence permutation were applied for noise.
+Sentence permutation was performed on a turn-by-turn basis.
 
 ```sh
 $ python -m run train \
@@ -121,13 +120,13 @@ $ python -m run train \
     --epochs 50 --seed 42 --max-learning-rate 2e-4 --batch-size 64 --gpus 1 \
     --model-config-path resources/configs/default.json
 ```
-- 이 학습의 학습추이는 [Wandb](https://wandb.ai/alaggung/dialogue_summarization_public/runs/2vn8htcd)에서 볼 수 있습니다.
-- 이 단계를 학습한 모델은 [alaggung/bart-pretrained](https://huggingface.co/alaggung/bart-pretrained)에서 사용할 수 있습니다.
+- The training detail of this learning can be viewed in [Wandb](https://wandb.ai/alaggung/dialogue_summarization_public/runs/2vn8htcd).
+- The model trained in this step can be used in [alaggung/bart-pretrained](https://huggingface.co/alaggung/bart-pretrained).
 
 ### 3. Dialogue Summarization finetune (R3F)
 
-사전학습 후에는 Dialogue Summarization task를 학습시켰습니다.
-이때 Abstract Summarization에서 좋은 효과를 보이는 R3F 기법을 적용하였습니다.
+After pre-training, a Dialogue Summarization task was trained.
+In this case, the R3F technique, which shows a good performance in Abstract Summarization, was applied.
 
 ```sh
 $ python -m run train \
@@ -140,13 +139,13 @@ $ python -m run train \
     --model-config-path resources/configs/default.json \
     --pretrained-ckpt-path outputs/pretrain/models/model-49epoch-218374steps-0.6568loss-0.8601acc
 ```
-- 이 학습의 학습추이는 [Wandb](https://wandb.ai/alaggung/dialogue_summarization_public/runs/2yc359fn)에서 볼 수 있습니다.
-- 이 단계를 학습한 모델은 [alaggung/bart-r3f](https://huggingface.co/alaggung/bart-r3f)에서 사용할 수 있습니다.
+- The training detail of this learning can be viewed in [Wandb](https://wandb.ai/alaggung/dialogue_summarization_public/runs/2yc359fn).
+- The model trained in this step can be used in [alaggung/bart-r3f](https://huggingface.co/alaggung/bart-r3f).
 
 ### 4. Dialogue Summarization finetune (RL)
 
-마지막으로 학습의 목표를 대회의 평가지표인 ROUGE-L F1 score와 align시키기 위해서 고전적인 RL을 적용했습니다.
-target metric은 모델이 생성한 요약문과 실제 요약문간의 mecab분절 기준 ROUGE-L F1 score를 사용하였습니다.
+Finally, classical RL was applied to align the learning goal with the ROUGE-L F1 score, which is the evaluation metric of the competition.
+As the target metric, the ROUGE-L F1 score was used based on the mecab segmentation between the model-generated summary and the actual summary.
 
 ```sh
 $ python -m run train \
@@ -159,8 +158,8 @@ $ python -m run train \
     --model-config-path resources/configs/default.json \
     --pretrained-ckpt-path outputs/r3f/models/model-09epoch-43374steps-1.2955loss-0.6779acc
 ```
-- 이 학습의 학습추이는 [Wandb](https://wandb.ai/alaggung/dialogue_summarization_public/runs/3ae2abvk)에서 볼 수 있습니다.
-- 이 단계를 학습한 모델은 [alaggung/bart-rl](https://huggingface.co/alaggung/bart-rl)에서 사용할 수 있습니다.
+- The training detail of this learning can be viewed in [Wandb](https://wandb.ai/alaggung/dialogue_summarization_public/runs/3ae2abvk).
+- The model trained in this step can be used in [alaggung/bart-rl](https://huggingface.co/alaggung/bart-rl).
 
 ## Run
 
@@ -176,11 +175,11 @@ $ python -m run train \
     --valid-dataset-pattern "data/Validation/*.json" \
     --gpus 1
 ```
-- 위와 같이 데이터와 config, tokenizer 경로를 주고 학습스크립트를 실행할 수 있습니다.
-- `method` 인자는 학습 방법을 설정하는 것이며 `default`, `pretrain`, `r3f`, `rdrop`, `rl` 중에 하나를 택해야합니다. method에 따라 해당 학습 기법으로 학습합니다.
-- `pretrain`은 BART pretrain이라서 대화요약 task를 학습하지 않습니다.
-- `rl`은 학습에서 target summary와의 ROUGE-L F1 점수를 계산해 사용하는데 이때 mecab을 이용해 형태소를 분절하기 때문에 mecab이 설치되어야 하며 **docker/dialogue-summary-specials.csv** 파일을 사용자 사전에 추가해주면 좋습니다.
-- 학습스크립트는 매 validation마다 체크포인트를 저장합니다. 모든 결과물은 `--output-dir` 디렉토리에 저장되며 모델은 huggingface pretrained 모델 형식으로 models 디렉토리에 저장됩니다.
+- As above, you can run the training script by giving the data, config, and tokenizer path.
+- The `method` argument sets the training technique, and one of `default`, `pretrain`, `r3f`, `rdrop`, and `rl` should be selected.
+- `pretrain` is a BART pretrain, so it does not teach the conversation summary task.
+- `rl` calculates and uses the ROUGE-L F1 score in learning. At this time, since morphemes are segmented using mecab, mecab must be installed and it's better that the **docker/dialogue-summary-specials.csv** file was added to the mecab user dictionary.
+- The training script saves checkpoints for every validation. All output is stored in the `--output-dir` directory and the models are stored in the models directory in the format of huggingface pretrained models.
 
 ```sh
 $ docker run --rm \
@@ -195,9 +194,9 @@ $ docker run --rm \
     --valid-dataset-pattern "/project/data/Validation/*.json" \
     --gpus 1
 ```
-- 코드를 다운받아서 파이썬 패키지를 설치하거나 mecab을 설치하고 사용자사전을 추가해주는 과정이 귀찮은 경우 위와 같이 docker로 학습을 실행하면 환경에 관계없이 편히 학습을 진행할 수 있습니다. 물론 아래에 있는 Inference나 Interactive Test도 같은 방식으로 docker로 실행할 수 있습니다.
-- GPU를 사용하는 경우 nvidia-docker의 버전에 따라 `--runtime nvidia`나 `--gpus all` 등의 인자를 맞춰서 설정해주어야 합니다. 또한 `latest-gpu`와 같이 `-gpu`가 붙어있는 태그를 이용해야합니다.
-- Wandb에 해당 run을 기록하고자하는 경우 `-it` 옵션을 줘서 직접 API키를 입력하거나 `WANDB_API_KEY` 환경변수로 API키를 넣어줘야 합니다.
+- If the process of downloading the code and installing the Python package or installing mecab and adding the user dictionary is bothersome, you can perform learning with docker as above, regardless of the environment. Of course, Inference or Interactive Test below can also be run with docker in the same way.
+- In case of using GPU, you need to set parameters such as `--runtime nvidia` or `--gpus all` according to the version of nvidia-docker. You should also use tags with `-gpu`, such as `latest-gpu`.
+- If you want to record the run in Wandb, you must either directly input the API key by giving the `-it` option or enter the API key as the `WANDB_API_KEY` environment variable.
 
 ### Inference
 
@@ -209,8 +208,8 @@ $ python -m run.inference \
     --output-path result.tsv \
     --device cuda
 ```
-- 이 코드는 모델의 추론 결과를 확인하는 코드입니다. 이렇게 실행할 경우 해당 모델로 추론한 결과를 result.tsv에 저장합니다. tsv파일은 id, dialogue, target summary, predict summary 이렇게 4개의 열로 구성되어 있습니다.
-- 결과 파일로 정성적으로 요약문을 비교해도 되고 target summary와 predict summary로 ROUGE 등의 점수를 계산해서 분석해도 됩니다.
+- Above code is to check the inference result of the model. Executing like this, the result inferred by the model is saved in result.tsv. tsv file consists of 4 columns: id, dialogue, target summary, predict summary.
+- You can compare summary sentences qualitatively with the result file, or calculate and analyze scores such as ROUGE with target summary and predict summary.
 
 ### Interactive Test
 
@@ -235,8 +234,8 @@ Summary:  어제 김치찌개를 먹어서 한식 말고 돈가스를 먹기로 
 
 Start Interactive Summary? (Y/n) n
 ```
-- interactive는 발화를 하나씩 입력하면서 직접 모델의 대화요약 성능을 테스트해볼 수 있습니다. 발화를 입력하지 않고 엔터를 쳐서 넘기면 종료되고 요약문을 출력합니다.
-- 요약을 진행하면 다시 Interactive Summary를 시작할 지 묻는데 종료하고 싶으면 no나 n을 입력하면 됩니다.
+- Interactive allows you to directly test the dialogue summary performance of the model while inputting utterances one by one. If you hit enter without entering an utterance, it will end and a summary will be printed.
+- If you proceed with the summary, you will be asked if you want to start Interactive Summary again. If you want to quit, just enter no or n.
 
 ## References
 
