@@ -1,0 +1,14 @@
+cff-version: 1.2.0
+message: "If you use this code or model, please cite it as below."
+authors:
+- family-names: "Park"
+  given-names: "Sangjun"
+  orcid: "https://orcid.org/0000-0002-1838-9259"
+- family-names: "Choi"
+  given-names: "Kiwon"
+- family-names: "Oh"
+  given-names: "Hyerin"
+title: "2021-dialogue-summary-competition"
+version: 1.0.0
+date-released: 2022-01-13
+url: "https://github.com/cosmoquester/2021-dialogue-summary-competition"
