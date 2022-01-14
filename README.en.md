@@ -195,6 +195,7 @@ $ docker run --rm \
     --gpus 1
 ```
 - If the process of downloading the code and installing the Python package or installing mecab and adding the user dictionary is bothersome, you can perform learning with docker as above, regardless of the environment. Of course, Inference or Interactive Test below can also be run with docker in the same way.
+- Available docker images are [here](https://hub.docker.com/r/cosmoquester/2021-dialogue-summary-competition/tags).
 - In case of using GPU, you need to set parameters such as `--runtime nvidia` or `--gpus all` according to the version of nvidia-docker. You should also use tags with `-gpu`, such as `latest-gpu`.
 - If you want to record the run in Wandb, you must either directly input the API key by giving the `-it` option or enter the API key as the `WANDB_API_KEY` environment variable.
 

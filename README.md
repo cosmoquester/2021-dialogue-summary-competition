@@ -196,6 +196,7 @@ $ docker run --rm \
     --gpus 1
 ```
 - 코드를 다운받아서 파이썬 패키지를 설치하거나 mecab을 설치하고 사용자사전을 추가해주는 과정이 귀찮은 경우 위와 같이 docker로 학습을 실행하면 환경에 관계없이 편히 학습을 진행할 수 있습니다. 물론 아래에 있는 Inference나 Interactive Test도 같은 방식으로 docker로 실행할 수 있습니다.
+- 사용가능한 도커이미지 목록은 [여기](https://hub.docker.com/r/cosmoquester/2021-dialogue-summary-competition/tags)에 있습니다.
 - GPU를 사용하는 경우 nvidia-docker의 버전에 따라 `--runtime nvidia`나 `--gpus all` 등의 인자를 맞춰서 설정해주어야 합니다. 또한 `latest-gpu`와 같이 `-gpu`가 붙어있는 태그를 이용해야합니다.
 - Wandb에 해당 run을 기록하고자하는 경우 `-it` 옵션을 줘서 직접 API키를 입력하거나 `WANDB_API_KEY` 환경변수로 API키를 넣어줘야 합니다.
 
