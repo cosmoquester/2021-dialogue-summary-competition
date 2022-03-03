@@ -5,7 +5,7 @@ wandb==0.12.9
 
 ### required for RL Module
 mecab-python3==1.0.4
-rouge==1.0.1
+rouge-score==0.0.4
 
 ### required for training tokenizer
 sentencepiece==0.1.96
