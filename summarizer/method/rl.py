@@ -69,9 +69,9 @@ class ReinforceLearningModule(pl.LightningModule):
             exit(1)
 
         try:
-            from rouge import Rouge
+            from rouge_score.rouge_scorer import RougeScorer
         except ModuleNotFoundError:
-            print("[-] Please `pip install rouge`")
+            print("[-] Please `pip install rouge-score`")
             exit(1)
 
         mecab_dir = os.getenv("MECAB_DICT_DIR")
@@ -81,7 +81,7 @@ class ReinforceLearningModule(pl.LightningModule):
         else:
             self.tagger = Tagger()
             print(f"[+] Use default mecab dictionary, Please set 'MECAB_DICT_DIR' environemt variable for custom dict")
-        self.rouge = Rouge(metrics=["rouge-l"], stats=["f"])
+        self.rouge = RougeScorer(["rougeL"])
 
     def to_morphemes(self, text: str) -> str:
         """Tokenize text with mecab and rejoin with white space"""
@@ -91,9 +91,11 @@ class ReinforceLearningModule(pl.LightningModule):
 
     def get_rouge_f1(self, predictions: List[str], targets: List[str]) -> List[float]:
         """Calculate rouge-l f1 score"""
-        predictions = [self.to_morphemes(text) for text in predictions]
         targets = [self.to_morphemes(text) for text in targets]
-        return [m["rouge-l"]["f"] for m in self.rouge.get_scores(predictions, targets, avg=False)]
+        predictions = [self.to_morphemes(text) for text in predictions]
+        return [
+            self.rouge.score(target, prediction)["rougeL"].fmeasure for target, prediction in zip(targets, predictions)
+        ]
 
     def training_step(self, batch, batch_idx):
         # Maximum likelihood
