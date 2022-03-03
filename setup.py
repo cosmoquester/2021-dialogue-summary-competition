@@ -10,7 +10,7 @@ setup(
     long_description=long_description,
     python_requires=">=3.7",
     install_requires=["torch", "transformers", "pytorch-lightning", "wandb"],
-    extras_require={"rl": ["mecab-python3", "rouge"], "tokenizer": ["sentencepiece", "httpimport"]},
+    extras_require={"rl": ["mecab-python3", "rouge-score"], "tokenizer": ["sentencepiece", "httpimport"]},
     url="https://github.com/cosmoquester/2021-dialogue-summary-competition.git",
     author="Park Sangjun",
     keywords=["nlp", "dialogue", "summarization", "huggingface-transformers", "pytorch-lightning"],
