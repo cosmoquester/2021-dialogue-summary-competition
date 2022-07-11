@@ -7,12 +7,13 @@
 
 [[2021 Korean Voice/Natural Language AI Competition](http://aihub-competition.or.kr/hangeul)] This is repository to share training and inference codes of Team 알라꿍달라꿍.
 
+You can see the contest detail, our ideas and experiments during the contest, on the Pingpong team blog post [알라꿍달라꿍의 대화요약 이모저모](https://blog.pingpong.us/alaggung-dlaggung-dialog-summary/).
+
 Team: Sangjun Park([cosmoquester](https://github.com/cosmoquester)), Kiwon Choi([ckw1140](https://github.com/ckw1140)), Hyerin Oh([Hyerin-oh](https://github.com/Hyerin-oh))
 
 Our team consists of these three people.
 
 The final leaderboard is as follows, [Won 1st place in the dialogue summary section and got the Naver Representative Award](https://www.msit.go.kr/bbs/view.do?sCode=user&mId=113&mPid=112&pageIndex=1&bbsSeqNo=94&nttSeqNo=3181143&searchOpt=ALL&searchTxt=%EA%B2%BD%EC%A7%84%EB%8C%80%ED%9A%8C)
-
 
 | Rank | Name | Score |
 | ---- | ---- | ----- |
@@ -25,7 +26,7 @@ The final leaderboard is as follows, [Won 1st place in the dialogue summary sect
 As the technique used in the competition, you can easily use the model trained using only AIHub data without external data.
 
 ```sh
-$ pip install transformers
+pip install transformers
 ```
 
 ```python
@@ -42,6 +43,7 @@ print(summarization)
 # Your max_length is set to 64, but you input_length is only 51. You might consider decreasing max_length manually, e.g. summarizer('...', max_length=25)
 # [{'summary_text': '어제 김치찌개를 먹어서 한식 말고 돈가스를 먹기로 했다.'}]
 ```
+
 - You can run it with `pipeline` simply.
 
 ```python
@@ -71,6 +73,7 @@ summarization = tokenizer.decode(outputs[0], skip_special_tokens=True)
 print(summarization)
 # 어제 김치찌개를 먹어서 한식 말고 돈가스를 먹기로 했다.
 ```
+
 - You can make an inference manually like this.
 
 ## Directory Structure
@@ -120,6 +123,7 @@ $ python -m run train \
     --epochs 50 --seed 42 --max-learning-rate 2e-4 --batch-size 64 --gpus 1 \
     --model-config-path resources/configs/default.json
 ```
+
 - The training detail of this learning can be viewed in [Wandb](https://wandb.ai/alaggung/dialogue_summarization_public/runs/2vn8htcd).
 - The model trained in this step can be used in [alaggung/bart-pretrained](https://huggingface.co/alaggung/bart-pretrained).
 
@@ -139,6 +143,7 @@ $ python -m run train \
     --model-config-path resources/configs/default.json \
     --pretrained-ckpt-path outputs/pretrain/models/model-49epoch-218374steps-0.6568loss-0.8601acc
 ```
+
 - The training detail of this learning can be viewed in [Wandb](https://wandb.ai/alaggung/dialogue_summarization_public/runs/2yc359fn).
 - The model trained in this step can be used in [alaggung/bart-r3f](https://huggingface.co/alaggung/bart-r3f).
 
@@ -158,6 +163,7 @@ $ python -m run train \
     --model-config-path resources/configs/default.json \
     --pretrained-ckpt-path outputs/r3f/models/model-09epoch-43374steps-1.2955loss-0.6779acc
 ```
+
 - The training detail of this learning can be viewed in [Wandb](https://wandb.ai/alaggung/dialogue_summarization_public/runs/3ae2abvk).
 - The model trained in this step can be used in [alaggung/bart-rl](https://huggingface.co/alaggung/bart-rl).
 
@@ -175,6 +181,7 @@ $ python -m run train \
     --valid-dataset-pattern "data/Validation/*.json" \
     --gpus 1
 ```
+
 - As above, you can run the training script by giving the data, config, and tokenizer path.
 - The `method` argument sets the training technique, and one of `default`, `pretrain`, `r3f`, `rdrop`, and `rl` should be selected.
 - `pretrain` is a BART pretrain, so it does not teach the conversation summary task.
@@ -194,6 +201,7 @@ $ docker run --rm \
     --valid-dataset-pattern "/project/data/Validation/*.json" \
     --gpus 1
 ```
+
 - If the process of downloading the code and installing the Python package or installing mecab and adding the user dictionary is bothersome, you can perform learning with docker as above, regardless of the environment. Of course, Inference or Interactive Test below can also be run with docker in the same way.
 - Available docker images are [here](https://hub.docker.com/r/cosmoquester/2021-dialogue-summary-competition/tags).
 - In case of using GPU, you need to set parameters such as `--runtime nvidia` or `--gpus all` according to the version of nvidia-docker. You should also use tags with `-gpu`, such as `latest-gpu`.
@@ -209,6 +217,7 @@ $ python -m run.inference \
     --output-path result.tsv \
     --device cuda
 ```
+
 - Above code is to check the inference result of the model. Executing like this, the result inferred by the model is saved in result.tsv. tsv file consists of 4 columns: id, dialogue, target summary, predict summary.
 - You can compare summary sentences qualitatively with the result file, or calculate and analyze scores such as ROUGE with target summary and predict summary.
 
@@ -223,18 +232,19 @@ $ python -m run interactive \
 [2022-01-10 00:48:35,718] [+] Load Tokenizer from "alaggung/bart-r3f"
 [2022-01-10 00:48:35,727] [+] Load Model from "alaggung/bart-r3f"
 [2022-01-10 00:48:39,918] [+] Eval mode & Disable gradient
-Start Interactive Summary? (Y/n) 
+Start Interactive Summary? (Y/n)
 Utterance 1: 밥 ㄱ?
 Utterance 2: 고고고고 뭐 먹을까?
 Utterance 3: 어제 김치찌개 먹어서 한식말고 딴 거
 Utterance 4: 그럼 돈까스 어때?
 Utterance 5: 오 좋다 1시 학관 앞으로 오셈
 Utterance 6: ㅇㅋ
-Utterance 7: 
+Utterance 7:
 Summary:  어제 김치찌개를 먹어서 한식 말고 돈가스를 먹기로 했다.
 
 Start Interactive Summary? (Y/n) n
 ```
+
 - Interactive allows you to directly test the dialogue summary performance of the model while inputting utterances one by one. If you hit enter without entering an utterance, it will end and a summary will be printed.
 - If you proceed with the summary, you will be asked if you want to start Interactive Summary again. If you want to quit, just enter no or n.
 
